@@ -123,7 +123,7 @@ export default {
   created() {
     this.getUserInfo()
     this.getList()
-    this.getAvatar()
+    // this.getAvatar()
   },
   methods: {
     getAvatar() {
@@ -164,7 +164,8 @@ export default {
     getList() {
       temp.getList(this.page, this.pageSize).then(response => {
         this.list = response.data.list
-        this.total = response.data.count
+        this.total = response.data.total
+        console.log(this.total)
       })
     },
     handleSizeChange(size) {

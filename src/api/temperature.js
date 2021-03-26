@@ -22,7 +22,7 @@ export default {
   },
   getList(currentPage, pageSize) {
     return request({
-      url: `/temperature/pageUserList?currentPage=${currentPage}&pageSize=${pageSize}`,
+      url: `/temperature/pageRecordList?currentPage=${currentPage}&pageSize=${pageSize}`,
       method: 'get'
     })
   }
