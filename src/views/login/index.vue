@@ -3,13 +3,13 @@
     <!-- 登录信息区域 -->
     <el-form v-if="showLogin" ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" label-position="left">
       <h3 class="title">C502信息管理系统</h3>
-      <el-form-item prop="username">
+      <el-form-item key="1" prop="username">
         <span class="svg-container">
           <svg-icon icon-class="user" />
         </span>
         <el-input v-model="loginForm.username" name="username" type="text" placeholder="username" />
       </el-form-item>
-      <el-form-item prop="password">
+      <el-form-item key="2" prop="password">
         <span class="svg-container">
           <svg-icon icon-class="password" />
         </span>
@@ -36,19 +36,19 @@
     <!-- 注册信息区域 -->
     <el-form v-else ref="registerForm" :model="registerForm" :rules="registerRules" class="login-form" label-position="left">
       <h3 class="title">C502信息管理系统</h3>
-      <el-form-item prop="username">
+      <el-form-item key="3" prop="username">
         <span class="svg-container">
           <svg-icon icon-class="user" />
         </span>
         <el-input v-model="registerForm.username" name="username" type="text" placeholder="username" />
       </el-form-item>
-      <el-form-item prop="password">
+      <el-form-item key="4" prop="password">
         <span class="svg-container">
           <svg-icon icon-class="password" />
         </span>
         <el-input v-model="registerForm.password" name="password" type="text" placeholder="password" />
       </el-form-item>
-      <el-form-item prop="repassword">
+      <el-form-item key="5" prop="repassword">
         <span class="svg-container">
           <svg-icon icon-class="password" />
         </span>
@@ -72,13 +72,6 @@ import user from '@/api/user'
 export default {
   name: 'Login',
   data() {
-    const validateRegisterUsername = (rule, value, callback) => {
-      if (this.allName.indexOf(value.trim()) >= 0) {
-        callback(new Error('用户名不允许重复'))
-      } else {
-        callback()
-      }
-    }
     const validateUsername = (rule, value, callback) => {
       if (value.length < 2) {
         callback(new Error('请输入正确的用户名'))
@@ -93,15 +86,36 @@ export default {
         callback()
       }
     }
-    const validateRePass = (rule, value, callback) => {
+    const validateRegisterUsername = (rule, value, callback) => {
+      if (value.length < 2) {
+        callback(new Error('请输入正确的用户名'))
+      } else {
+        if (this.allName.indexOf(value.trim()) >= 0) {
+          callback(new Error('用户名不允许重复'))
+        } else {
+          callback()
+        }
+      }
+    }
+    const validateRegisterPass = (rule, value, callback) => {
       if (value.length < 5) {
         callback(new Error('密码不能小于5位'))
       } else {
-        if (value !== this.registerForm.password) {
+        if (this.registerForm.repassword !== '' && this.registerForm.repassword !== value) {
           callback(new Error('两次密码不一致'))
         } else {
           callback()
         }
+      }
+    }
+    const validateRegisterRePass = (rule, value, callback) => {
+      if (value.length < 5) {
+        callback(new Error('密码不能小于5位'))
+      }
+      if (value !== this.registerForm.password) {
+        callback(new Error('两次密码不一致'))
+      } else {
+        callback()
       }
     }
     return {
@@ -120,8 +134,8 @@ export default {
       },
       registerRules: {
         username: [{ required: true, trigger: 'blur', validator: validateRegisterUsername }],
-        password: [{ required: true, trigger: 'blur', validator: validatePass }],
-        repassword: [{ required: true, trigger: 'blur', validator: validateRePass }]
+        password: [{ required: true, trigger: 'blur', validator: validateRegisterPass }],
+        repassword: [{ required: true, trigger: 'blur', validator: validateRegisterRePass }]
       },
       loading: false,
       pwdType: 'password',
