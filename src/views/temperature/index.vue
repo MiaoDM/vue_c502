@@ -59,7 +59,7 @@
           <el-input v-model="editUserInfoForm.mail"/>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="doEditUserInfo('editUserInfoRef')">立即提交</el-button>
+          <el-button type="primary" @click.native.prevent="doEditUserInfo('editUserInfoRef')">立即提交</el-button>
           <el-button @click="cancelEditUserInfo('editUserInfoRef')">取消</el-button>
         </el-form-item>
       </el-form>
@@ -80,7 +80,7 @@
           <el-input v-model="addUserInfoForm.mail"/>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="doAddUserInfo('addUserInfoRef')">立即提交</el-button>
+          <el-button type="primary" @click.native.prevent="doAddUserInfo('addUserInfoRef')">立即提交</el-button>
           <el-button @click="cancelAddUserInfo('addUserInfoRef')">取消</el-button>
         </el-form-item>
       </el-form>

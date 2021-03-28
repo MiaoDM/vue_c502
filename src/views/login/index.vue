@@ -176,9 +176,17 @@ export default {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
           this.loading = true
-          this.$store.dispatch('Login', this.loginForm).then(() => {
-            this.loading = false
-            this.$router.push({ path: this.redirect || '/' })
+          this.$store.dispatch('Login', this.loginForm).then((response) => {
+            if (response.code !== 20000) {
+              this.$message({
+                type: 'warning',
+                message: '用户名或密码错误'
+              })
+              this.loading = false
+            } else {
+              this.loading = false
+              this.$router.push({ path: this.redirect || '/' })
+            }
           }).catch(() => {
             this.loading = false
           })
