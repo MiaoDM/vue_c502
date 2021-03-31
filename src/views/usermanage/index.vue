@@ -47,7 +47,7 @@
         <el-table-column prop="delete_time" label="禁用时间" />
         <el-table-column label="操作" width="250">
           <template slot-scope="scope">
-            <el-button :disabled="scope.row.status === 1 || scope.row.status === 2 ? true : false" type="primary" size="small" @click="passUser(scope.row.id)">通过审核</el-button>
+            <el-button :disabled="scope.row.status === 0 ? true : false" type="primary" size="small" @click="passUser(scope.row.id)">通过审核</el-button>
             <el-button :disabled="scope.row.status === 1 ? false : true" type="danger" size="small" @click="disableUser(scope.row.id)">禁用</el-button>
             <el-button :disabled="scope.row.status === 2 ? false : true" type="success" size="small" @click="enableUser(scope.row.id)">启用</el-button>
           </template>
