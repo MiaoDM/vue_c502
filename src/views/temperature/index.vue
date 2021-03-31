@@ -70,14 +70,14 @@
       title="添加用户信息"
       width="30%">
       <el-form ref="addUserInfoRef" :model="addUserInfoForm" label-width="80px">
-        <el-form-item label="用户名">
-          <el-input v-model="addUserInfoForm.stuNum"/>
+        <el-form-item label="用户名" >
+          <el-input v-model="addUserInfoForm.stuNum" placeholder="请输入科大体温收集系统账号"/>
         </el-form-item>
         <el-form-item label="密码">
-          <el-input v-model="addUserInfoForm.pwd"/>
+          <el-input v-model="addUserInfoForm.pwd" placeholder="请输入科大体温收集系统密码"/>
         </el-form-item>
         <el-form-item label="邮箱地址">
-          <el-input v-model="addUserInfoForm.mail"/>
+          <el-input v-model="addUserInfoForm.mail" placeholder="请输入可以正常接收邮件的邮箱"/>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click.native.prevent="doAddUserInfo('addUserInfoRef')">立即提交</el-button>

@@ -180,7 +180,7 @@ export default {
             if (response.code !== 20000) {
               this.$message({
                 type: 'warning',
-                message: '用户名或密码错误'
+                message: response.message
               })
               this.loading = false
             } else {

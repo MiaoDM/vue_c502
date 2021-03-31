@@ -11,6 +11,13 @@
             <el-form-item>
               <el-button type="primary" @click="onSearch('searchRef')">查询</el-button>
             </el-form-item>
+            <el-form-item>
+              <el-switch
+                v-model="adminInfo.status"
+                active-text="启用管理员审核注册"
+                inactive-text="禁用管理员审核注册"
+                @change="switchChange"/>
+            </el-form-item>
           </el-form>
         </div>
       </div>
@@ -29,11 +36,20 @@
             <img :src="scope.row.avatar" alt="" height="70" width="70">
           </template>
         </el-table-column>
-        <el-table-column prop="create_time" label="注册时间" />
-        <el-table-column prop="delete_time" label="删除时间" />
-        <el-table-column label="操作" >
+        <el-table-column prop="status" label="用户状态" >
           <template slot-scope="scope">
-            <el-button type="danger" size="small" @click="deleteUser(scope.row.id)">删除</el-button>
+            <el-tag v-if="scope.row.status === 0" type="info">待审核</el-tag>
+            <el-tag v-else-if="scope.row.status === 1" type="success">正常</el-tag>
+            <el-tag v-else-if="scope.row.status === 2" type="danger">已禁用</el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column prop="create_time" label="注册时间" />
+        <el-table-column prop="delete_time" label="禁用时间" />
+        <el-table-column label="操作" width="250">
+          <template slot-scope="scope">
+            <el-button :disabled="scope.row.status === 1 || scope.row.status === 2 ? true : false" type="primary" size="small" @click="passUser(scope.row.id)">通过审核</el-button>
+            <el-button :disabled="scope.row.status === 1 ? false : true" type="danger" size="small" @click="disableUser(scope.row.id)">禁用</el-button>
+            <el-button :disabled="scope.row.status === 2 ? false : true" type="success" size="small" @click="enableUser(scope.row.id)">启用</el-button>
           </template>
         </el-table-column>
         <div class="page">
@@ -63,37 +79,112 @@ export default {
       list: null,
       searchForm: {
         username: ''
+      },
+      adminInfo: {
+        status: null
       }
     }
   },
   created() {
     this.getList()
+    this.getAdminInfo()
   },
   methods: {
-    deleteUser(userId) {
-      this.$confirm('此操作将删除该货物信息, 是否继续?', '提示', {
+    getAdminInfo() {
+      usermanage.getAdminInfo().then(response => {
+        if (response.data.status === 1) {
+          this.adminInfo.status = true
+        } else {
+          this.adminInfo.status = false
+        }
+      })
+    },
+    switchChange() {
+      if (this.adminInfo.status === true) {
+        this.adminInfo.status = 1
+      } else {
+        this.adminInfo.status = 0
+      }
+      usermanage.editAdminInfo(this.adminInfo).then(response => {
+        if (response.code === 20000) {
+          if (this.adminInfo.status === 1) {
+            this.$message({
+              type: 'success',
+              message: '已启用管理员审核注册！'
+            })
+          } else {
+            this.$message({
+              type: 'warning',
+              message: '已禁用管理员审核注册！'
+            })
+          }
+          this.getAdminInfo()
+        } else {
+          this.$message({
+            type: 'warn',
+            message: '管理员审核注册修改失败！'
+          })
+        }
+      })
+    },
+    passUser(userId) {
+      usermanage.passUser(userId).then(response => {
+        if (response.code === 20000) {
+          this.$message({
+            type: 'success',
+            message: '已通过该用户'
+          })
+          this.getList()
+        } else {
+          this.$message({
+            type: 'info',
+            message: response.message
+          })
+          this.getList()
+        }
+      })
+    },
+    enableUser(userId) {
+      usermanage.enableUser(userId).then(response => {
+        if (response.code === 20000) {
+          this.$message({
+            type: 'success',
+            message: '已启用该用户'
+          })
+          this.getList()
+        } else {
+          this.$message({
+            type: 'info',
+            message: response.message
+          })
+          this.getList()
+        }
+      })
+    },
+    disableUser(userId) {
+      this.$confirm('此操作将禁用该用户, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        usermanage.deleteUser(userId).then(response => {
+        usermanage.disableUser(userId).then(response => {
           if (response.code === 20000) {
             this.$message({
               type: 'success',
-              message: '删除成功!'
+              message: '已禁用该用户!'
             })
             this.getList()
           } else {
             this.$message({
               type: 'info',
-              message: '删除失败!'
+              message: '禁用失败!'
             })
           }
         })
       }).catch(() => {
         this.$message({
           type: 'info',
-          message: '已取消删除'
+          message: '已取消禁用！'
         })
       })
     },
