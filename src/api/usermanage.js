@@ -35,7 +35,7 @@ export default {
   },
   enableUser(userId) {
     return request({
-      url: `/user/passUser?userId=${userId}`,
+      url: `/user/enableUser?userId=${userId}`,
       method: 'get'
     })
   }
