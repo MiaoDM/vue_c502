@@ -45,11 +45,11 @@
         </el-table-column>
         <el-table-column prop="create_time" label="注册时间" />
         <el-table-column prop="delete_time" label="禁用时间" />
-        <el-table-column label="操作" width="250">
+        <el-table-column label="操作" width="150">
           <template slot-scope="scope">
-            <el-button :disabled="scope.row.status === 0 ? false : true" type="primary" size="small" @click="passUser(scope.row.id)">通过审核</el-button>
-            <el-button :disabled="scope.row.status === 1 ? false : true" type="danger" size="small" @click="disableUser(scope.row.id)">禁用</el-button>
-            <el-button :disabled="scope.row.status === 2 ? false : true" type="success" size="small" @click="enableUser(scope.row.id)">启用</el-button>
+            <el-button v-if="scope.row.status === 0" type="primary" size="small" @click="passUser(scope.row.id)">通过审核</el-button>
+            <el-button v-if="scope.row.status === 1 " type="danger" size="small" @click="disableUser(scope.row.id)">禁用</el-button>
+            <el-button v-if="scope.row.status === 2 " type="success" size="small" @click="enableUser(scope.row.id)">启用</el-button>
           </template>
         </el-table-column>
         <div class="page">
@@ -132,7 +132,7 @@ export default {
         if (response.code === 20000) {
           this.$message({
             type: 'success',
-            message: '已通过该用户'
+            message: '已通过该用户的注册请求！'
           })
           this.getList()
         } else {
